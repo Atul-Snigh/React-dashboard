@@ -5,8 +5,8 @@ const dbConfig: PoolConfig = {
 };
 
 // Workaround for local DNS issue resolving .tech domains
-// Only apply if the hostname matches the known problematic one
-if (process.env.DATABASE_URL && process.env.DATABASE_URL.includes('ep-curly-dew-a1qy6f5w-pooler.ap-southeast-1.aws.neon.tech')) {
+// Only apply if the hostname matches the known problematic one AND we are in development
+if (process.env.NODE_ENV === 'development' && process.env.DATABASE_URL && process.env.DATABASE_URL.includes('ep-curly-dew-a1qy6f5w-pooler.ap-southeast-1.aws.neon.tech')) {
   try {
     const url = new URL(process.env.DATABASE_URL);
     dbConfig.host = '52.220.170.93'; // Resolved IP for ap-southeast-1.aws.neon.tech
