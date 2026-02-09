@@ -6,8 +6,10 @@ A minimalist, high-performance React dashboard featuring role-based authenticati
 
 -   **Authentication**: Secure Signup, Login, and Logout using HttpOnly cookies and JWT (`jose`).
 -   **Role-Based Access Control (RBAC)**:
-    -   **Admin**: View all users, **Approve** new registrations, and **Revoke** access.
-    -   **User**: Protected dashboard access only after admin approval.
+    -   **Admin**:
+        -   **System Overview**: Real-time metrics for Total Users, Server Status, and API Usage.
+        -   **User Management**: Enhanced table with avatars, role badges, and actions (**Approve**, **Revoke**, **Delete**).
+    -   **User**: Protected dashboard with **Activity Graph**, **Profile**, and **Recent Logs**.
 -   **Database**: Serverless PostgreSQL via Neon DB.
 -   **Styling**: Premium "Minimalist Dark" theme using Tailwind CSS.
 -   **Performance**: Fast, server-side rendered pages with Next.js App Router.
