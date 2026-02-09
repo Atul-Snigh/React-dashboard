@@ -1,36 +1,82 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# React Dashboard with Neon DB
 
-## Getting Started
+A minimalist, high-performance React dashboard featuring role-based authentication (Admin/User), secure sessions, and a modern dark UI. Built with **Next.js 16**, **Tailwind CSS v4**, and **PostgreSQL (Neon DB)**.
 
-First, run the development server:
+## 🚀 Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+-   **Authentication**: Secure Signup, Login, and Logout using HttpOnly cookies and JWT (`jose`).
+-   **Role-Based Access Control (RBAC)**:
+    -   **Admin**: View all users, **Approve** new registrations, and **Revoke** access.
+    -   **User**: Protected dashboard access only after admin approval.
+-   **Database**: Serverless PostgreSQL via Neon DB.
+-   **Styling**: Premium "Minimalist Dark" theme using Tailwind CSS.
+-   **Performance**: Fast, server-side rendered pages with Next.js App Router.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🛠 Tech Stack
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+-   **Framework**: Next.js 16 (App Router)
+-   **Styling**: Tailwind CSS v4
+-   **Database**: PostgreSQL (Neon Tech)
+-   **ORM/Driver**: `pg` (node-postgres)
+-   **Auth**: `jose` (JWT), `bcrypt` (Password Hashing)
+-   **Icons**: `lucide-react`
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## ⚙️ Local Setup
 
-## Learn More
+1.  **Clone the repository**:
+    ```bash
+    git clone https://github.com/Atul-Snigh/React-dashboard.git
+    cd React-dashboard
+    ```
 
-To learn more about Next.js, take a look at the following resources:
+2.  **Install Dependencies**:
+    ```bash
+    npm install
+    ```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+3.  **Environment Variables**:
+    Create a `.env.local` file in the root directory:
+    ```env
+    DATABASE_URL=postgresql://neondb_owner:npg_9GdVJ7AZxRop@ep-curly-dew-a1qy6f5w-pooler.ap-southeast-1.aws.neon.tech/neondb?sslmode=require
+    JWT_SECRET=supersecretkey12345
+    ```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+4.  **Initialize Database**:
+    Run the setup script to create tables and seed the admin user:
+    ```bash
+    node scripts/setup-db.js
+    ```
+    *(Note: This script handles local DNS resolution for Neon DB automatically)*
 
-## Deploy on Vercel
+5.  **Run Development Server**:
+    ```bash
+    npm run dev
+    ```
+    Open [http://localhost:3000](http://localhost:3000) (or the port shown in terminal).
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 📖 Usage Guide
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### 1. Admin Login
+-   **URL**: `/login`
+-   **Email**: `test@test.com`
+-   **Password**: `Test123@123`
+-   **Action**: Login to view the dashboard. Use the **"Approve"** or **"Revoke"** buttons to manage user access.
+
+### 2. User Registration Flow
+1.  Go to `/signup` and create a new account.
+2.  You will see a message: *"Registration successful! Please wait for admin approval."*
+3.  Login attempt will fail with *"Account pending admin approval"*.
+4.  **Admin** logs in and clicks **"Approve"**.
+5.  **User** can now login successfully to `/user`.
+
+## 📦 Deployment
+
+This project is optimized for deployment on **Vercel**.
+
+1.  Push your code to GitHub.
+2.  Import the project in Vercel.
+3.  Add `DATABASE_URL` and `JWT_SECRET` in Vercel Environment Variables.
+4.  Click **Deploy**.
+
+---
+*Created by [Antigravity]*

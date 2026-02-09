@@ -2,6 +2,9 @@
 
 import { useEffect, useState } from 'react';
 import { useAuth, User } from '@/hooks/useAuth';
+import SystemOverview from '@/components/admin/SystemOverview';
+import UserTable from '@/components/admin/UserTable';
+import { LogOut } from 'lucide-react';
 
 export default function AdminDashboard() {
     const { user, loading, logout } = useAuth();
@@ -41,79 +44,51 @@ export default function AdminDashboard() {
         }
     };
 
+    const handleDelete = async (userId: number) => {
+        if (!confirm('Are you sure you want to delete this user? This action cannot be undone.')) return;
+
+        try {
+            const res = await fetch('/api/admin/users', {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ userId }),
+            });
+
+            if (res.ok) {
+                fetchUsers();
+            }
+        } catch (error) {
+            console.error('Failed to delete user', error);
+        }
+    };
+
     if (loading) return <div className="min-h-screen bg-zinc-950 flex items-center justify-center text-zinc-400">Loading...</div>;
     if (!user || user.role !== 'admin') return <div className="min-h-screen bg-zinc-950 flex items-center justify-center text-zinc-400">Access Denied</div>;
 
     return (
-        <div className="min-h-screen bg-zinc-950 text-zinc-100 p-8">
-            <div className="max-w-6xl mx-auto">
-                <header className="flex justify-between items-center mb-10">
+        <div className="min-h-screen bg-zinc-950 text-zinc-100 p-6 md:p-12">
+            <div className="max-w-7xl mx-auto space-y-8">
+                <header className="flex justify-between items-center mb-10 pb-6 border-b border-zinc-800">
                     <div>
-                        <h1 className="text-2xl font-bold tracking-tight">Admin</h1>
-                        <p className="text-zinc-500 text-sm">User Verification & Management</p>
+                        <h1 className="text-3xl font-bold tracking-tight text-white">Admin Dashboard</h1>
+                        <p className="text-zinc-500 mt-1">Manage system performance and user access.</p>
                     </div>
                     <button
                         onClick={logout}
-                        className="text-zinc-400 hover:text-white text-sm font-medium transition-colors"
+                        className="flex items-center gap-2 px-4 py-2 rounded-lg bg-zinc-900 border border-zinc-800 hover:bg-zinc-800 transition-colors text-sm font-medium text-zinc-300 hover:text-white"
                     >
+                        <LogOut className="w-4 h-4" />
                         Sign Out
                     </button>
                 </header>
 
-                <div className="border border-zinc-800 rounded-lg overflow-hidden">
-                    <table className="min-w-full divide-y divide-zinc-800">
-                        <thead className="bg-zinc-900/50">
-                            <tr>
-                                <th className="px-6 py-4 text-left text-xs font-medium text-zinc-500 uppercase tracking-wider">ID</th>
-                                <th className="px-6 py-4 text-left text-xs font-medium text-zinc-500 uppercase tracking-wider">Email</th>
-                                <th className="px-6 py-4 text-left text-xs font-medium text-zinc-500 uppercase tracking-wider">Role</th>
-                                <th className="px-6 py-4 text-left text-xs font-medium text-zinc-500 uppercase tracking-wider">Status</th>
-                                <th className="px-6 py-4 text-right text-xs font-medium text-zinc-500 uppercase tracking-wider">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody className="bg-zinc-950 divide-y divide-zinc-800">
-                            {users.map((u) => (
-                                <tr key={u.id} className="hover:bg-zinc-900/50 transition-colors">
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-zinc-500 font-mono">{u.id}</td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-zinc-200">{u.email}</td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-zinc-400">
-                                        {u.role}
-                                    </td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm">
-                                        {u.is_approved ? (
-                                            <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-500">
-                                                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-                                                Active
-                                            </span>
-                                        ) : (
-                                            <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-500/10 text-yellow-500">
-                                                <span className="w-1.5 h-1.5 rounded-full bg-yellow-500"></span>
-                                                Pending
-                                            </span>
-                                        )}
-                                    </td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm space-x-2">
-                                        {!u.is_approved ? (
-                                            <button
-                                                onClick={() => handleApprove(u.id!, true)}
-                                                className="text-white bg-zinc-800 hover:bg-zinc-700 px-3 py-1 rounded text-xs transition-colors border border-zinc-700"
-                                            >
-                                                Approve
-                                            </button>
-                                        ) : (
-                                            <button
-                                                onClick={() => handleApprove(u.id!, false)}
-                                                className="text-white bg-red-900/30 hover:bg-red-900/50 text-red-400 px-3 py-1 rounded text-xs transition-colors border border-red-900/50"
-                                            >
-                                                Revoke
-                                            </button>
-                                        )}
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
+                <SystemOverview totalUsers={users.length} />
+
+                <UserTable
+                    users={users}
+                    onApprove={handleApprove}
+                    onDelete={handleDelete}
+                />
             </div>
         </div>
     );
