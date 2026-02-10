@@ -3,9 +3,11 @@ import type { NextRequest } from 'next/server';
 import { verifyJWT } from '@/lib/auth';
 
 // Middleware to protect routes
-export default async function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
     const token = request.cookies.get('token')?.value;
     const { pathname } = request.nextUrl;
+
+    console.log(`Middleware: Checking ${pathname}, Token present: ${!!token}`);
 
     // Paths that require auth
     const protectedPaths = ['/admin', '/user'];
@@ -13,29 +15,26 @@ export default async function middleware(request: NextRequest) {
 
     if (isProtected) {
         if (!token) {
+            console.log('Middleware: No token, redirecting to login');
             return NextResponse.redirect(new URL('/login', request.url));
         }
 
         const payload = await verifyJWT(token);
         if (!payload) {
+            console.log('Middleware: Invalid token, redirecting to login');
             return NextResponse.redirect(new URL('/login', request.url));
         }
 
+        console.log(`Middleware: User role: ${(payload as any).role}`);
+
         // Role-based protection
         if (pathname.startsWith('/admin') && (payload as any).role !== 'admin') {
+            console.log('Middleware: Admin path accessed by non-admin, redirecting');
             return NextResponse.redirect(new URL('/user', request.url)); // or 403
         }
 
         if (pathname.startsWith('/user') && (payload as any).role !== 'user' && (payload as any).role !== 'admin') {
-            // Admins can view user pages? implementation_plan said "Admin -> Admin Page, User -> User Page".
-            // Let's strict route: Admin -> /admin, User -> /user.
-            if ((payload as any).role === 'admin') {
-                // Allow admin to see user page? Or redirect to admin?
-                // User request: "When admin login they go to admin and user will go to user page"
-                // I'll redirect admin to /admin if they try to go to /user?
-                // No, let's keep it simple. Admin is admin.
-                return NextResponse.redirect(new URL('/admin', request.url));
-            }
+            // Allow generic user access or logic here
         }
     }
 
