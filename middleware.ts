@@ -7,34 +7,23 @@ export async function middleware(request: NextRequest) {
     const token = request.cookies.get('token')?.value;
     const { pathname } = request.nextUrl;
 
-    console.log(`Middleware: Checking ${pathname}, Token present: ${!!token}`);
-
     // Paths that require auth
     const protectedPaths = ['/admin', '/user'];
     const isProtected = protectedPaths.some((path) => pathname.startsWith(path));
 
     if (isProtected) {
         if (!token) {
-            console.log('Middleware: No token, redirecting to login');
             return NextResponse.redirect(new URL('/login', request.url));
         }
 
         const payload = await verifyJWT(token);
         if (!payload) {
-            console.log('Middleware: Invalid token, redirecting to login');
             return NextResponse.redirect(new URL('/login', request.url));
         }
 
-        console.log(`Middleware: User role: ${(payload as any).role}`);
-
         // Role-based protection
         if (pathname.startsWith('/admin') && (payload as any).role !== 'admin') {
-            console.log('Middleware: Admin path accessed by non-admin, redirecting');
             return NextResponse.redirect(new URL('/user', request.url)); // or 403
-        }
-
-        if (pathname.startsWith('/user') && (payload as any).role !== 'user' && (payload as any).role !== 'admin') {
-            // Allow generic user access or logic here
         }
     }
 

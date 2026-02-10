@@ -39,6 +39,16 @@ export default function UserDashboard() {
 
                         <RecentLogs />
                     </div>
+
+                    <div className="lg:col-span-3">
+                        <h2 className="text-xl font-semibold text-white mb-4">Tools</h2>
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            <a href="/user/tools/youtube-summarizer" className="block p-6 bg-zinc-900 border border-zinc-800 rounded-xl hover:bg-zinc-800 transition-colors group">
+                                <h3 className="text-lg font-medium text-white mb-2 group-hover:text-blue-400 transition-colors">YouTube Summarizer</h3>
+                                <p className="text-zinc-400 text-sm">Generate clean study notes from any YouTube video instantly.</p>
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

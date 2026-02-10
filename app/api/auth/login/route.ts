@@ -52,7 +52,7 @@ export async function POST(request: Request) {
         }
     } catch (error) {
         console.error('Login error:', error);
-        console.error('Login error details:', JSON.stringify(error, Object.getOwnPropertyNames(error), 2));
+
         return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
     }
 }
