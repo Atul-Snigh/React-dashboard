@@ -79,6 +79,7 @@ This project is optimized for deployment on **Vercel**.
 2.  Import the project in Vercel.
 3.  Add `DATABASE_URL` and `JWT_SECRET` in Vercel Environment Variables.
 4.  Click **Deploy**.
+5.  **Troubleshooting**: If you encounter PDF worker errors, ensure `next.config.ts` includes the `pdf.worker` webpack rule (already included in this repo).
 
 ---
 
