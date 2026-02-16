@@ -19,7 +19,7 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: 'URL is required' }, { status: 400 });
         }
 
-        console.log(`Fetching transcript for: ${url}`);
+
 
         // Basic validation
         if (!url.includes('youtube.com') && !url.includes('youtu.be')) {
@@ -44,7 +44,7 @@ export async function POST(req: Request) {
                 return NextResponse.json({ error: 'No usable caption track found' }, { status: 404 });
             }
 
-            console.log(`Using track: ${track.name.simpleText} (${track.languageCode})`);
+
 
             // 3. Fetch the transcript XML
             const transcriptXml = await fetchUrl(track.baseUrl);
@@ -67,7 +67,7 @@ export async function POST(req: Request) {
 
             // Truncate to avoid huge prompts
             if (transcriptText.length > 20000) {
-                console.log('Truncating transcript > 20k chars');
+
                 transcriptText = transcriptText.substring(0, 20000) + "...[TRUNCATED]";
             }
 

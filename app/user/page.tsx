@@ -47,6 +47,10 @@ export default function UserDashboard() {
                                 <h3 className="text-lg font-medium text-white mb-2 group-hover:text-blue-400 transition-colors">YouTube Summarizer</h3>
                                 <p className="text-zinc-400 text-sm">Generate clean study notes from any YouTube video instantly.</p>
                             </a>
+                            <a href="/user/tools/doc-qa" className="block p-6 bg-zinc-900 border border-zinc-800 rounded-xl hover:bg-zinc-800 transition-colors group">
+                                <h3 className="text-lg font-medium text-white mb-2 group-hover:text-blue-400 transition-colors">Document Q&A</h3>
+                                <p className="text-zinc-400 text-sm">Upload PDF or text documents and ask questions to extract insights instantly.</p>
+                            </a>
                         </div>
                     </div>
                 </div>

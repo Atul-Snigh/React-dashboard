@@ -41,6 +41,25 @@ async function main() {
         is_approved BOOLEAN DEFAULT false,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       );
+
+      -- Enable pgvector extension
+      CREATE EXTENSION IF NOT EXISTS vector;
+
+      -- Documents table
+      CREATE TABLE IF NOT EXISTS documents (
+        id SERIAL PRIMARY KEY,
+        user_id INTEGER REFERENCES users(id),
+        filename VARCHAR(255) NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      );
+
+      -- Document chunks table with vector embedding
+      CREATE TABLE IF NOT EXISTS document_chunks (
+        id SERIAL PRIMARY KEY,
+        document_id INTEGER REFERENCES documents(id) ON DELETE CASCADE,
+        content TEXT NOT NULL,
+        embedding vector(384) -- Dimension for all-MiniLM-L6-v2
+      );
     `);
 
         // Seed admin user

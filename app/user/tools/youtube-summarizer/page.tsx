@@ -44,7 +44,7 @@ export default function YouTubeSummarizerPage() {
 
                     transcriptText = transcriptData.transcript;
                 } catch (fetchErr: any) {
-                    console.log('Auto-fetch failed, asking for manual input');
+                    // Auto-fetch failed, asking for manual input
                     setStatusMessage('');
                     throw fetchErr; // Re-throw to catch block to show error and stay in manual mode
                 }
@@ -66,8 +66,6 @@ export default function YouTubeSummarizerPage() {
 
             setNotes(summarizeData.notes);
             setStatusMessage('');
-            // Reset manual input state if successful, or keep it?
-            // Keep it so user can see what they used.
 
         } catch (err: any) {
             setError(err.message);
