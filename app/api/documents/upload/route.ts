@@ -1,3 +1,4 @@
+import '@/lib/polyfill';
 import { NextResponse } from 'next/server';
 import pool from '@/lib/db';
 import { verifyJWT } from '@/lib/auth';
