@@ -1,10 +1,9 @@
-import '@/lib/polyfill';
 import { NextResponse } from 'next/server';
 import pool from '@/lib/db';
 import { verifyJWT } from '@/lib/auth';
 import { cookies } from 'next/headers';
 import { generateEmbedding } from '@/lib/ai';
-import { PDFParse } from 'pdf-parse';
+import PDFParser from 'pdf2json';
 
 export async function POST(req: Request) {
     try {
@@ -32,19 +31,16 @@ export async function POST(req: Request) {
         let text = '';
 
         if (file.type === 'application/pdf') {
-            console.log('Starting PDF parsing...');
-            try {
-                const parser = new PDFParse({ data: buffer });
-                console.log('PDF parser created');
-                const data = await parser.getText();
-                console.log('PDF text extracted, length:', data.text.length);
-                text = data.text;
-            } catch (pdfError) {
-                console.error('PDF parsing error:', pdfError);
-                throw new Error('Failed to parse PDF: ' + (pdfError as Error).message);
-            }
+            const pdfParser = new PDFParser(null, true);
+
+            text = await new Promise((resolve, reject) => {
+                pdfParser.on("pdfParser_dataError", (errData: any) => reject(errData.parserError));
+                pdfParser.on("pdfParser_dataReady", (pdfData) => {
+                    resolve(pdfParser.getRawTextContent());
+                });
+                pdfParser.parseBuffer(buffer);
+            });
         } else {
-            console.log('Processing text file...');
             text = buffer.toString('utf-8');
         }
 
