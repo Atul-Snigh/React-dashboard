@@ -32,7 +32,7 @@ export async function generateEmbedding(text: string) {
 export async function askDocumentQuestion(question: string, context: string) {
     try {
         const response = await openai.chat.completions.create({
-            model: 'google/gemini-2.0-flash-lite-preview-02-05:free', // Using a fast, free model
+            model: 'google/gemini-2.0-flash-001', // Using a valid model
             messages: [
                 {
                     role: 'system',
@@ -60,7 +60,7 @@ export async function askDocumentQuestion(question: string, context: string) {
 export async function generateStudyNotes(transcript: string) {
     try {
         const response = await openai.chat.completions.create({
-            model: 'google/gemini-2.0-flash-lite-preview-02-05:free', // Using a fast, free model
+            model: 'google/gemini-2.0-flash-001', // Using a valid model
             messages: [
                 {
                     role: 'system',
