@@ -8,11 +8,9 @@ const dbConfig = {
     connectionString: process.env.DATABASE_URL,
 };
 
-// Override with IP if specific hostname matches (hack for local dev environment)
 if (process.env.DATABASE_URL && process.env.DATABASE_URL.includes('ep-curly-dew-a1qy6f5w-pooler.ap-southeast-1.aws.neon.tech')) {
-    console.log('Applying local DNS workaround for Neon DB...');
     const url = new URL(process.env.DATABASE_URL);
-    dbConfig.host = '52.220.170.93'; // Resolved IP for ap-southeast-1.aws.neon.tech
+    dbConfig.host = '13.228.184.177'; // Alternative Resolved IP for ap-southeast-1.aws.neon.tech
     dbConfig.user = url.username;
     dbConfig.password = url.password;
     dbConfig.database = url.pathname.slice(1);
@@ -22,7 +20,6 @@ if (process.env.DATABASE_URL && process.env.DATABASE_URL.includes('ep-curly-dew-
         servername: 'ep-curly-dew-a1qy6f5w-pooler.ap-southeast-1.aws.neon.tech',
     };
     delete dbConfig.connectionString;
-    console.log('DB Config:', { ...dbConfig, password: '***' });
 }
 
 const pool = new Pool(dbConfig);
@@ -82,7 +79,6 @@ async function main() {
         console.log('Database setup complete.');
     } catch (err) {
         console.error('Error setting up database:', err);
-        console.error('Error details:', JSON.stringify(err, null, 2));
     } finally {
         client.release();
         await pool.end();

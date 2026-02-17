@@ -7,6 +7,21 @@ const dbConfig: PoolConfig = {
   },
 };
 
+// Workaround for local DNS issue resolving .tech domains
+if (process.env.DATABASE_URL && process.env.DATABASE_URL.includes('ep-curly-dew-a1qy6f5w-pooler.ap-southeast-1.aws.neon.tech')) {
+  const url = new URL(process.env.DATABASE_URL);
+  dbConfig.host = '13.228.184.177'; // Alternative Resolved IP for ap-southeast-1.aws.neon.tech
+  dbConfig.user = url.username;
+  dbConfig.password = url.password;
+  dbConfig.database = url.pathname.slice(1);
+  dbConfig.port = 5432;
+  dbConfig.ssl = {
+    rejectUnauthorized: true,
+    servername: 'ep-curly-dew-a1qy6f5w-pooler.ap-southeast-1.aws.neon.tech', // SNI requires the hostname
+  };
+  delete dbConfig.connectionString;
+}
+
 const pool = new Pool(dbConfig);
 
 export default pool;
