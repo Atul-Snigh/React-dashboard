@@ -126,7 +126,7 @@ export default function WorkspaceDetailPage() {
             if (res.ok) {
                 setMessages(prev => [...prev, { role: 'assistant', content: data.answer }]);
             } else {
-                setMessages(prev => [...prev, { role: 'assistant', content: "Sorry, I encountered an error answering that." }]);
+                setMessages(prev => [...prev, { role: 'assistant', content: `Sorry, I encountered an error: ${data.error || 'Unknown error'}` }]);
             }
         } catch (error) {
             console.error("Chat error:", error);
@@ -137,19 +137,26 @@ export default function WorkspaceDetailPage() {
     };
 
     const handleDeleteDoc = async (docId: string) => {
-        if (!confirm('Delete this document?')) return;
-        // Assume document delete API exists or reuse generic delete if available
-        // For now, implementing optimistically or if delete API endpoint exists
-        // Wait, I haven't implemented DELETE /api/documents/[id] specifically for workspaces?
-        // Let's check api/documents/list? No.
-        // I should have a delete endpoint. Let's assume standard deletion is fine.
-        // Current task instructions didn't explicitly ask for Delete Doc functionality updates but it's good UX.
-        // I will implement a placeholder or skip if not critical. 
-        // Let's just create a quick delete handler fetching /api/documents/delete (if it existed)
-        // Actually, user previous history "Adding PDF Delete Functionality" suggests it exists.
-        // Let's try calling DELETE /api/documents/[id] if implemented, or just skip for now to stick to scope.
-        // I'll skip implementation of doc delete here to keep it simple as per request.
-        alert("Document deletion not implemented in this view yet.");
+        if (!confirm('Are you sure you want to delete this document? \nThis will also remove it from the chat context.')) return;
+
+        try {
+            const res = await fetch(`/api/documents/${docId}`, {
+                method: 'DELETE',
+            });
+
+            if (res.ok) {
+                // Remove from local state immediately for responsiveness
+                setDocuments(prev => prev.filter(d => d.id !== docId));
+                // Clear chat if it was about this document? optional.
+                // Reset chat if needed or just let it be.
+            } else {
+                const data = await res.json();
+                alert(data.error || 'Failed to delete document');
+            }
+        } catch (error) {
+            console.error('Error deleting document:', error);
+            alert('An error occurred while deleting');
+        }
     };
 
     if (loading) return <div className="flex h-screen items-center justify-center bg-gray-50 text-gray-500">Loading workspace...</div>;
@@ -182,6 +189,13 @@ export default function WorkspaceDetailPage() {
                                     <p className="text-sm font-medium text-gray-700 truncate">{doc.filename}</p>
                                     <p className="text-xs text-gray-400">{new Date(doc.created_at).toLocaleDateString()}</p>
                                 </div>
+                                <button
+                                    onClick={() => handleDeleteDoc(doc.id)}
+                                    className="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg opacity-0 group-hover:opacity-100 transition-all"
+                                    title="Delete document"
+                                >
+                                    <Trash2 className="w-4 h-4" />
+                                </button>
                             </div>
                         ))}
                         {documents.length === 0 && (

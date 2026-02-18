@@ -64,7 +64,7 @@ export async function DELETE(req: Request, { params }: { params: Promise<{ id: s
             return NextResponse.json({ error: 'Invalid token' }, { status: 401 });
         }
 
-        const workspaceId = params.id;
+        const workspaceId = id;
 
         // Check ownership first
         const { rows: check } = await pool.query(

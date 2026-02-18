@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import pool from '@/lib/db';
 
+import { verifyJWT } from '@/lib/auth';
+import { cookies } from 'next/headers';
+
 export async function DELETE(
     req: NextRequest,
     { params }: { params: Promise<{ id: string }> }
@@ -13,10 +16,36 @@ export async function DELETE(
             return NextResponse.json({ error: 'Invalid document ID' }, { status: 400 });
         }
 
+        const cookieStore = await cookies();
+        const token = cookieStore.get('token')?.value;
+
+        if (!token) {
+            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+        }
+
+        const payload = await verifyJWT(token);
+        if (!payload || !payload.id) {
+            return NextResponse.json({ error: 'Invalid token' }, { status: 401 });
+        }
+
         const client = await pool.connect();
         try {
+            // Verify ownership: Join documents with workspaces to check user_id
+            const { rows: check } = await client.query(
+                `SELECT d.id 
+                 FROM documents d
+                 JOIN workspaces w ON d.workspace_id = w.id
+                 WHERE d.id = $1 AND w.user_id = $2`,
+                [documentId, payload.id]
+            );
+
+            if (check.length === 0) {
+                return NextResponse.json({ error: 'Document not found or access denied' }, { status: 403 });
+            }
+
+            // Proceed with deletion
             await client.query('DELETE FROM documents WHERE id = $1', [documentId]);
-            // Cascading delete should handle document_chunks
+
             return NextResponse.json({ success: true });
         } finally {
             client.release();

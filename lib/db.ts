@@ -22,6 +22,24 @@ if (process.env.DATABASE_URL && process.env.DATABASE_URL.includes('ep-curly-dew-
   delete dbConfig.connectionString;
 }
 
-const pool = new Pool(dbConfig);
+const pool = new Pool({
+  ...dbConfig,
+  max: 10,
+  idleTimeoutMillis: 30000,
+  connectionTimeoutMillis: 10000,
+});
 
-export default pool;
+// Use a global variable to store the pool instance in development
+// to avoid creating multiple connections during hot reloading
+let globalPool: Pool;
+
+if (process.env.NODE_ENV === 'production') {
+  globalPool = pool;
+} else {
+  if (!(global as any).postgres) {
+    (global as any).postgres = pool;
+  }
+  globalPool = (global as any).postgres;
+}
+
+export default globalPool;
