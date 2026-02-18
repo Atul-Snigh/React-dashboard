@@ -49,14 +49,14 @@ export function ChatInterface({ documentId }: { documentId: number | null }) {
 
     if (!documentId) {
         return (
-            <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-6 h-[500px] flex items-center justify-center text-zinc-500">
+            <div className="bg-white border border-gray-200 rounded-xl p-6 h-[500px] flex items-center justify-center text-gray-400 shadow-sm">
                 Select a document to start chatting
             </div>
         );
     }
 
     return (
-        <div className="bg-zinc-900 border border-zinc-800 rounded-xl flex flex-col h-[600px]">
+        <div className="bg-white border border-gray-200 rounded-xl flex flex-col h-[600px] shadow-sm">
             <div className="flex-1 overflow-y-auto p-4 space-y-4">
                 {messages.map((msg, idx) => (
                     <div
@@ -66,10 +66,10 @@ export function ChatInterface({ documentId }: { documentId: number | null }) {
                         <div
                             className={`max-w-[80%] rounded-lg px-4 py-2 ${msg.role === 'user'
                                 ? 'bg-blue-600 text-white'
-                                : 'bg-zinc-800 text-zinc-200'
+                                : 'bg-gray-100 text-gray-800'
                                 }`}
                         >
-                            <div className="prose prose-invert max-w-none text-sm">
+                            <div className="prose prose-sm max-w-none">
                                 <ReactMarkdown>{msg.content}</ReactMarkdown>
                             </div>
                         </div>
@@ -77,28 +77,28 @@ export function ChatInterface({ documentId }: { documentId: number | null }) {
                 ))}
                 {loading && (
                     <div className="flex justify-start">
-                        <div className="bg-zinc-800 rounded-lg px-4 py-2">
-                            <Loader2 className="w-4 h-4 animate-spin text-zinc-400" />
+                        <div className="bg-gray-100 rounded-lg px-4 py-2">
+                            <Loader2 className="w-4 h-4 animate-spin text-gray-500" />
                         </div>
                     </div>
                 )}
                 <div ref={messagesEndRef} />
             </div>
 
-            <div className="p-4 border-t border-zinc-800 flex gap-2">
+            <div className="p-4 border-t border-gray-200 flex gap-2">
                 <input
                     type="text"
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
                     onKeyDown={(e) => e.key === 'Enter' && handleSend()}
                     placeholder="Ask a question about this document..."
-                    className="flex-1 bg-zinc-950 border border-zinc-800 rounded-lg px-4 py-2 text-zinc-100 focus:outline-none focus:ring-2 focus:ring-blue-600"
+                    className="flex-1 bg-white border border-gray-300 rounded-lg px-4 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-400"
                     disabled={loading}
                 />
                 <button
                     onClick={handleSend}
                     disabled={loading || !input.trim()}
-                    className="bg-blue-600 hover:bg-blue-700 text-white p-2 rounded-lg disabled:opacity-50 transition-colors"
+                    className="bg-blue-600 hover:bg-blue-700 text-white p-2 rounded-lg disabled:opacity-50 transition-colors shadow-sm"
                 >
                     <Send className="w-5 h-5" />
                 </button>

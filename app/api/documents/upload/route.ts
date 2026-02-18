@@ -21,9 +21,41 @@ export async function POST(req: Request) {
 
         const formData = await req.formData();
         const file = formData.get('file') as File;
+        const workspaceId = formData.get('workspaceId') as string;
 
         if (!file) {
             return NextResponse.json({ error: 'No file uploaded' }, { status: 400 });
+        }
+
+        let finalWorkspaceId = workspaceId;
+
+        // If no workspace provided, find or create a default one
+        if (!finalWorkspaceId) {
+            const { rows: defaultWs } = await pool.query(
+                'SELECT id FROM workspaces WHERE user_id = $1 ORDER BY created_at ASC LIMIT 1',
+                [payload.id]
+            );
+
+            if (defaultWs.length > 0) {
+                finalWorkspaceId = defaultWs[0].id;
+            } else {
+                // Create a default workspace
+                const { rows: newWs } = await pool.query(
+                    'INSERT INTO workspaces (user_id, name) VALUES ($1, $2) RETURNING id',
+                    [payload.id, 'Default Workspace']
+                );
+                finalWorkspaceId = newWs[0].id;
+            }
+        } else {
+            // Verify workspace access if ID was provided
+            const { rows: workspaceCheck } = await pool.query(
+                'SELECT id FROM workspaces WHERE id = $1 AND user_id = $2',
+                [finalWorkspaceId, payload.id]
+            );
+
+            if (workspaceCheck.length === 0) {
+                return NextResponse.json({ error: 'Workspace not found or access denied' }, { status: 403 });
+            }
         }
 
         const arrayBuffer = await file.arrayBuffer();
@@ -54,8 +86,8 @@ export async function POST(req: Request) {
             await client.query('BEGIN');
 
             const docRes = await client.query(
-                'INSERT INTO documents (user_id, filename) VALUES ($1, $2) RETURNING id',
-                [payload.id, file.name]
+                'INSERT INTO documents (user_id, filename, workspace_id) VALUES ($1, $2, $3) RETURNING id',
+                [payload.id, file.name, finalWorkspaceId]
             );
             const documentId = docRes.rows[0].id;
 

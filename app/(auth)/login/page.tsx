@@ -43,40 +43,40 @@ export default function LoginPage() {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-zinc-950 p-4 text-zinc-100">
+        <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4 text-gray-900">
             <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
 
-            <div className="relative w-full max-w-sm">
+            <div className="relative w-full max-w-sm bg-white p-8 rounded-xl shadow-lg border border-gray-200">
                 <div className="text-center mb-10">
-                    <h2 className="text-3xl font-bold tracking-tight mb-2">Welcome back</h2>
-                    <p className="text-zinc-500 text-sm">Enter your credentials to access your account</p>
+                    <h2 className="text-3xl font-bold tracking-tight mb-2 text-gray-900">Welcome back</h2>
+                    <p className="text-gray-500 text-sm">Enter your credentials to access your account</p>
                 </div>
 
                 {error && (
-                    <div className="bg-red-500/10 border border-red-500/20 text-red-500 p-3 rounded-lg mb-6 text-sm">
+                    <div className="bg-red-50 border border-red-200 text-red-600 p-3 rounded-lg mb-6 text-sm">
                         {error}
                     </div>
                 )}
 
                 <form onSubmit={handleSubmit} className="space-y-5">
                     <div className="space-y-2">
-                        <label className="text-sm font-medium text-zinc-300">Email</label>
+                        <label className="text-sm font-medium text-gray-700">Email</label>
                         <input
                             type="email"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
-                            className="w-full px-3 py-2 bg-zinc-900 border border-zinc-800 rounded-md focus:outline-none focus:ring-2 focus:ring-zinc-700 focus:border-transparent transition-all placeholder-zinc-600 text-white"
+                            className="w-full px-3 py-2 bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all placeholder-gray-400 text-gray-900"
                             placeholder="name@example.com"
                             required
                         />
                     </div>
                     <div className="space-y-2">
-                        <label className="text-sm font-medium text-zinc-300">Password</label>
+                        <label className="text-sm font-medium text-gray-700">Password</label>
                         <input
                             type="password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
-                            className="w-full px-3 py-2 bg-zinc-900 border border-zinc-800 rounded-md focus:outline-none focus:ring-2 focus:ring-zinc-700 focus:border-transparent transition-all placeholder-zinc-600 text-white"
+                            className="w-full px-3 py-2 bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all placeholder-gray-400 text-gray-900"
                             placeholder="••••••••"
                             required
                         />
@@ -84,13 +84,13 @@ export default function LoginPage() {
                     <button
                         type="submit"
                         disabled={isLoading}
-                        className="w-full bg-white text-black font-semibold py-2.5 rounded-md hover:bg-zinc-200 transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="w-full bg-blue-600 text-white font-semibold py-2.5 rounded-md hover:bg-blue-700 transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
                     >
                         {isLoading ? 'Processing...' : 'Sign In'}
                     </button>
                 </form>
-                <p className="mt-8 text-center text-sm text-zinc-500">
-                    New here? <Link href="/signup" className="text-zinc-300 hover:text-white transition-colors">Create an account</Link>
+                <p className="mt-8 text-center text-sm text-gray-500">
+                    New here? <Link href="/signup" className="text-blue-600 hover:text-blue-500 font-medium transition-colors">Create an account</Link>
                 </p>
             </div>
         </div>

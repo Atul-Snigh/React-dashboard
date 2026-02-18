@@ -62,20 +62,20 @@ export default function AdminDashboard() {
         }
     };
 
-    if (loading) return <div className="min-h-screen bg-zinc-950 flex items-center justify-center text-zinc-400">Loading...</div>;
-    if (!user || user.role !== 'admin') return <div className="min-h-screen bg-zinc-950 flex items-center justify-center text-zinc-400">Access Denied</div>;
+    if (loading) return <div className="min-h-screen bg-gray-50 flex items-center justify-center text-gray-500">Loading...</div>;
+    if (!user || user.role !== 'admin') return <div className="min-h-screen bg-gray-50 flex items-center justify-center text-gray-500">Access Denied</div>;
 
     return (
-        <div className="min-h-screen bg-zinc-950 text-zinc-100 p-6 md:p-12">
+        <div className="min-h-screen bg-gray-50 text-gray-900 p-6 md:p-12">
             <div className="max-w-7xl mx-auto space-y-8">
-                <header className="flex justify-between items-center mb-10 pb-6 border-b border-zinc-800">
+                <header className="flex justify-between items-center mb-10 pb-6 border-b border-gray-200">
                     <div>
-                        <h1 className="text-3xl font-bold tracking-tight text-white">Admin Dashboard</h1>
-                        <p className="text-zinc-500 mt-1">Manage system performance and user access.</p>
+                        <h1 className="text-3xl font-bold tracking-tight text-gray-900">Admin Dashboard</h1>
+                        <p className="text-gray-500 mt-1">Manage system performance and user access.</p>
                     </div>
                     <button
                         onClick={logout}
-                        className="flex items-center gap-2 px-4 py-2 rounded-lg bg-zinc-900 border border-zinc-800 hover:bg-zinc-800 transition-colors text-sm font-medium text-zinc-300 hover:text-white"
+                        className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white border border-gray-200 hover:bg-gray-50 transition-colors text-sm font-medium text-gray-700 hover:text-gray-900 shadow-sm"
                     >
                         <LogOut className="w-4 h-4" />
                         Sign Out

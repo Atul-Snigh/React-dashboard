@@ -44,32 +44,32 @@ export function FileUpload({ onUploadComplete }: { onUploadComplete: () => void 
     };
 
     return (
-        <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-6 space-y-4">
-            <h3 className="text-lg font-semibold text-white">Upload Document</h3>
-            <div className="flex flex-col gap-4">
+        <div className="bg-white border-2 border-dashed border-gray-300 rounded-xl p-8 space-y-4 hover:border-gray-400 transition-colors">
+            <h3 className="text-xl font-semibold text-gray-900 text-center">Upload Document</h3>
+            <div className="flex flex-col gap-6 max-w-md mx-auto">
                 <input
                     type="file"
                     accept=".pdf,.txt"
                     onChange={handleFileChange}
-                    className="block w-full text-sm text-zinc-400
-            file:mr-4 file:py-2 file:px-4
+                    className="block w-full text-sm text-gray-500
+            file:mr-4 file:py-2.5 file:px-4
             file:rounded-full file:border-0
             file:text-sm file:font-semibold
-            file:bg-blue-600 file:text-white
-            hover:file:bg-blue-700
+            file:bg-blue-50 file:text-blue-700
+            hover:file:bg-blue-100
           "
                 />
                 {file && (
                     <button
                         onClick={handleUpload}
                         disabled={uploading}
-                        className="bg-green-600 hover:bg-green-700 text-white font-medium px-4 py-2 rounded-lg transition-colors flex items-center justify-center gap-2"
+                        className="bg-green-600 hover:bg-green-700 text-white font-medium px-4 py-2.5 rounded-lg transition-colors flex items-center justify-center gap-2 shadow-sm"
                     >
                         {uploading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
-                        Upload {file.name}
+                        Upload {file?.name}
                     </button>
                 )}
-                {error && <p className="text-red-400 text-sm">{error}</p>}
+                {error && <p className="text-red-600 text-sm text-center bg-red-50 p-2 rounded-lg border border-red-100">{error}</p>}
             </div>
         </div>
     );

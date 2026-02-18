@@ -40,6 +40,9 @@ export async function askDocumentQuestion(question: string, context: string) {
           Use the following pieces of context to answer the user's question.
           If the answer is not in the context, say you don't know.
           
+          Important: When answering, always cite the source document filename for the information you use.
+          Format citations as [Filename].
+          
           Context:
           ${context}`,
                 },
